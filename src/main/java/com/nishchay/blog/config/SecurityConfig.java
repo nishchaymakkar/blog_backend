@@ -46,6 +46,7 @@ public class SecurityConfig {
             HttpSecurity http,
            JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception{
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST,"/api/v1/auth").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/posts/**").permitAll()
