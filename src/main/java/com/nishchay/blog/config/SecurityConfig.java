@@ -46,15 +46,14 @@ public class SecurityConfig {
             HttpSecurity http,
            JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception{
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST,"/api/v1/auth").permitAll()
+               .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST,"/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/tags/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .cors(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                         ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
