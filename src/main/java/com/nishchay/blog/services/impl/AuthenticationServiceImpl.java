@@ -27,7 +27,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl  implements AuthenticationService {
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
@@ -68,7 +68,7 @@ public class AuthenticationServiceImpl  implements AuthenticationService {
                 .name(userSignUpDTo.getUserName())
                 .email(userSignUpDTo.getUserEmail())
                 .profession(userSignUpDTo.getUserProfession())
-                .password(bCryptPasswordEncoder.encode(userSignUpDTo.getUserPassword()))
+                .password(passwordEncoder.encode(userSignUpDTo.getUserPassword()))
                 .build();
         userRepository.save(newUser);
 
