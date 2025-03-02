@@ -2,8 +2,10 @@ package com.nishchay.blog.controllers;
 
 import com.nishchay.blog.domain.dtos.AuthResponse;
 import com.nishchay.blog.domain.dtos.LoginRequest;
+import com.nishchay.blog.domain.dtos.UserSignUpDTo;
 import com.nishchay.blog.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +31,19 @@ public class AuthController {
        AuthResponse authResponse =AuthResponse.builder()
                .token(tokenValue)
                .expiresIn(86400)
+               .userId()
                .build();
 
        return ResponseEntity.ok(authResponse);
+    }
+
+    @PostMapping("/userRegister")
+    public ResponseEntity<?> registerUser(@RequestBody UserSignUpDTo userSignUpDto){
+        try {
+            authenticationService.registerUser(userSignUpDto);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

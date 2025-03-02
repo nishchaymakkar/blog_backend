@@ -1,5 +1,8 @@
 package com.nishchay.blog.services.impl;
 
+import com.nishchay.blog.domain.dtos.UserSignUpDTo;
+import com.nishchay.blog.domain.entities.User;
+import com.nishchay.blog.repository.UserRepository;
 import com.nishchay.blog.services.AuthenticationService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -10,10 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -23,7 +27,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl  implements AuthenticationService {
-
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
 
@@ -54,6 +59,20 @@ public class AuthenticationServiceImpl  implements AuthenticationService {
                .parseClaimsJws(token)
                .getBody();
        return claims.getSubject();
+    }
+
+    @Override
+    public Void registerUser(UserSignUpDTo userSignUpDTo) {
+
+        User newUser = User.builder()
+                .name(userSignUpDTo.getUserName())
+                .email(userSignUpDTo.getUserEmail())
+                .profession(userSignUpDTo.getUserProfession())
+                .password(bCryptPasswordEncoder.encode(userSignUpDTo.getUserPassword()))
+                .build();
+        userRepository.save(newUser);
+
+        return null;
     }
 
     @Override
