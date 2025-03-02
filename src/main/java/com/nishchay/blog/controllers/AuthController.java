@@ -9,7 +9,6 @@ import com.nishchay.blog.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
-    private final AuthenticationService authenticationService;
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping(path = "/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest){
@@ -30,19 +28,16 @@ public class AuthController {
                 loginRequest.getEmail(),
                 loginRequest.getPassword()
         );
-
        String tokenValue = authenticationService.generateToken(userDetails);
-        User userId = userService.getUserIdByEmail(loginRequest.getEmail());
+        User user = userService.getUserIdByEmail(loginRequest.getEmail());
        AuthResponse authResponse =AuthResponse.builder()
-                                               .token(tokenValue)
-                                               .expiresIn(86400)
-                                               .userId(userId.getId())
-                                               .build();
+               .token(tokenValue)
+               .expiresIn(86400)
+               .userId(user.getId())
+               .build();
 
        return ResponseEntity.ok(authResponse);
     }
-
-
 
     @PostMapping("/userRegister")
     public ResponseEntity<?> registerUser(@RequestBody UserSignUpDTo userSignUpDto){
