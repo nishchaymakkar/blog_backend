@@ -27,7 +27,7 @@ public class PostController {
     private final PostService postService;
     private final PostMapper postMapper;
     private final UserService userService;
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<PostDto>> getAllPosts(
             @RequestParam(required = false)UUID categoryId,
             @RequestParam(required = false)UUID tagId
