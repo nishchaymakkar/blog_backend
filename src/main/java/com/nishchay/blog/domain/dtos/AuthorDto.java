@@ -14,4 +14,5 @@ import java.util.UUID;
 public class AuthorDto {
     private UUID id;
     private String name;
+    private String profession;
 }
