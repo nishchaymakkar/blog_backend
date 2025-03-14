@@ -48,7 +48,7 @@ public class TagServiceImpl implements TagService {
 
        Set<String> existingTagNames = existingTags
                .stream()
-               .map(tag -> tag.getName())
+               .map(Tag::getName)
                .collect(Collectors.toSet());
 
           List<Tag> newTags = tagNames.stream()

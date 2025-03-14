@@ -1,6 +1,7 @@
 package com.nishchay.blog.controllers;
 
 import com.nishchay.blog.domain.dtos.AuthResponse;
+import com.nishchay.blog.domain.dtos.AuthorDto;
 import com.nishchay.blog.domain.dtos.LoginRequest;
 import com.nishchay.blog.domain.dtos.UserSignUpDTo;
 import com.nishchay.blog.domain.entities.User;
@@ -33,6 +34,8 @@ public class AuthController {
        AuthResponse authResponse =AuthResponse.builder()
                .token(tokenValue)
                .expiresIn(86400)
+               .name(user.getName())
+               .profession(user.getProfession())
                .userId(user.getId())
                .build();
 

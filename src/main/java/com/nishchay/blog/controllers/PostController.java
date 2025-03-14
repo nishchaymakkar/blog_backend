@@ -27,14 +27,15 @@ public class PostController {
     private final PostService postService;
     private final PostMapper postMapper;
     private final UserService userService;
-    @GetMapping("/getAll")
+
+
+    @GetMapping
     public ResponseEntity<List<PostDto>> getAllPosts(
             @RequestParam(required = false)UUID categoryId,
             @RequestParam(required = false)UUID tagId
             ){
-       List<Post> posts = postService.getAllPosts(categoryId,tagId);
+        List<Post> posts = postService.getAllPosts(categoryId,tagId);
         List<PostDto> postDtos= posts.stream().map(postMapper::toDto).toList();
-
         return ResponseEntity.ok(postDtos);
     }
 
@@ -49,7 +50,8 @@ public class PostController {
     @PostMapping
     public ResponseEntity<PostDto> createPost(
            @Valid @RequestBody CreatePostRequestDto createPostRequestDto,
-            @RequestAttribute UUID userId){
+            @RequestParam("userId") UUID userId){
+        System.out.println(createPostRequestDto);
         User logedInUser = userService.getUserById(userId);
        CreatePostRequest createPostRequest = postMapper.toCreatePostRequest(createPostRequestDto);
        Post createdPost = postService.createPost(logedInUser,createPostRequest);
