@@ -1,5 +1,7 @@
 package com.nishchay.blog.services;
 
+import com.nishchay.blog.domain.dtos.AuthorDto;
+import com.nishchay.blog.domain.entities.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,5 +17,5 @@ public interface LikeService {
 
     boolean hasUserLiked(UUID userId, UUID postId);
 
-    List<UUID> getUserWhoLiked(UUID postId);
+    List<User> getUserWhoLiked(UUID postId);
 }

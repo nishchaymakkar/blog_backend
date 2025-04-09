@@ -1,5 +1,8 @@
 package com.nishchay.blog.controllers;
 
+import com.nishchay.blog.domain.dtos.AuthorDto;
+import com.nishchay.blog.domain.entities.User;
+import com.nishchay.blog.mappers.AuthorMapper;
 import com.nishchay.blog.services.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LikeController {
     private final LikeService likeService;
+    private final AuthorMapper authorMapper;
 
     @PostMapping("/likePost")
     public ResponseEntity<String> likePost(
@@ -46,8 +50,9 @@ public class LikeController {
     }
 
     @GetMapping("/listOfLikes")
-    public ResponseEntity<List<UUID>> getUserWhoLiked(@RequestParam("postId") UUID postId) {
-        List<UUID> userIds = likeService.getUserWhoLiked(postId);
-        return ResponseEntity.ok(userIds);
+    public ResponseEntity<List<AuthorDto>> getUserWhoLiked(@RequestParam("postId") UUID postId) {
+        List<User> usersWhoLiked = likeService.getUserWhoLiked(postId);
+        List<AuthorDto> userWhoLikedDto = usersWhoLiked.stream().map(authorMapper::toDto).toList();
+        return ResponseEntity.ok(userWhoLikedDto);
     }
 }

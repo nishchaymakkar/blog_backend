@@ -2,6 +2,7 @@ package com.nishchay.blog.services.impl;
 
 
 import com.nishchay.blog.domain.entities.Likes;
+import com.nishchay.blog.domain.entities.User;
 import com.nishchay.blog.repository.LikeRepository;
 import com.nishchay.blog.services.LikeService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public List<UUID> getUserWhoLiked(UUID postId) {
+    public List<User> getUserWhoLiked(UUID postId) {
         return likeRepository.findUserIdsByPostId(postId);
     }
 }

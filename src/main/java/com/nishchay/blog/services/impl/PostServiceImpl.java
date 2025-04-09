@@ -130,4 +130,10 @@ public class PostServiceImpl implements PostService {
         }
         return postRepository.findAllByStatus(PostStatus.PUBLISHED);
     }
+
+    @Override
+    public Post deletePost(UUID id) {
+         postRepository.deleteById(id);
+         return null;
+    }
 }
