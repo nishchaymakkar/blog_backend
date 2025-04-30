@@ -20,7 +20,7 @@ public class ErrorController {
         log.error("Caught exception", ex);
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .message("An unexpected error occured")
+                .message("An unexpected error occurred")
                 .build();
         return new ResponseEntity<>(error,HttpStatus.INTERNAL_SERVER_ERROR);
     }

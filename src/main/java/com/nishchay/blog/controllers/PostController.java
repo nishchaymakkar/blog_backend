@@ -3,6 +3,7 @@ package com.nishchay.blog.controllers;
 import com.nishchay.blog.domain.CreatePostRequest;
 import com.nishchay.blog.domain.UpdatePostRequest;
 import com.nishchay.blog.domain.dtos.CreatePostRequestDto;
+import com.nishchay.blog.domain.dtos.PaginationDTO;
 import com.nishchay.blog.domain.dtos.PostDto;
 import com.nishchay.blog.domain.dtos.UpdatePostRequestDto;
 import com.nishchay.blog.domain.entities.Post;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import jdk.jfr.Frequency;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +33,13 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<PostDto>> getAllPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false)UUID categoryId,
             @RequestParam(required = false)UUID tagId
             ){
-        List<Post> posts = postService.getAllPosts(categoryId,tagId);
+        PaginationDTO paginationDTO = new PaginationDTO(page,size);
+        Page<Post> posts = postService.getAllPosts(paginationDTO,categoryId,tagId);
         List<PostDto> postDtos= posts.stream().map(postMapper::toDto).toList();
         return ResponseEntity.ok(postDtos);
     }

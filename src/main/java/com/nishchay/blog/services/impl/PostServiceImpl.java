@@ -3,6 +3,7 @@ package com.nishchay.blog.services.impl;
 import com.nishchay.blog.domain.CreatePostRequest;
 import com.nishchay.blog.domain.PostStatus;
 import com.nishchay.blog.domain.UpdatePostRequest;
+import com.nishchay.blog.domain.dtos.PaginationDTO;
 import com.nishchay.blog.domain.entities.Category;
 import com.nishchay.blog.domain.entities.Post;
 import com.nishchay.blog.domain.entities.Tag;
@@ -13,6 +14,9 @@ import com.nishchay.blog.services.PostService;
 import com.nishchay.blog.services.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,7 +105,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> getAllPosts(UUID categoryId, UUID tagId) {
+    public Page<Post> getAllPosts(PaginationDTO paginationDTO, UUID categoryId, UUID tagId) {
+        Pageable pageable = PageRequest.of(paginationDTO.getPage(),paginationDTO.getSize());
 
         if (categoryId != null && tagId != null){
             Category category = categoryService.getCategoryById(categoryId);
@@ -109,7 +114,8 @@ public class PostServiceImpl implements PostService {
             return  postRepository.findAllByStatusAndCategoryAndTagsContaining(
                     PostStatus.PUBLISHED,
                     category,
-                    tag
+                    tag,
+                    pageable
             );
         }
 
@@ -117,7 +123,8 @@ public class PostServiceImpl implements PostService {
             Category category = categoryService.getCategoryById(categoryId);
             return postRepository.findAllByStatusAndCategory(
                     PostStatus.PUBLISHED,
-                    category
+                    category,
+                    pageable
             );
         }
 
@@ -125,10 +132,11 @@ public class PostServiceImpl implements PostService {
             Tag tag = tagService.getTagById(tagId);
             return  postRepository.findAllByStatusAndTagsContaining(
                     PostStatus.PUBLISHED,
-                    tag
+                    tag,
+                    pageable
             );
         }
-        return postRepository.findAllByStatus(PostStatus.PUBLISHED);
+        return postRepository.findAllByStatus(PostStatus.PUBLISHED,pageable);
     }
 
     @Override
